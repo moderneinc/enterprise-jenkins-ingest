@@ -3,9 +3,6 @@ def workspaceDir = new File(__FILE__).getParentFile()
 def gradleInitFileId = "gradle-init-gradle"
 def gradleInitRepoFile = "moderne-init.gradle"
 
-def mavenGradleEnterpriseXmlFileId = "maven-gradle-enterprise-xml"
-def mavenGradleEnterpriseXmlRepoFile = ".mvn/gradle-enterprise.xml"
-
 def mavenIngestSettingsXmlFileId = "maven-ingest-settings-credentials"
 def mavenIngestSettingsXmlRepoFile = ".mvn/ingest-settings.xml"
 
@@ -22,12 +19,6 @@ configFiles {
         name("Gradle: init.gradle")
         comment("A Gradle init script used to inject universal plugins into a gradle build.")
         content readFileFromWorkspace('gradle/init.gradle')
-    }
-    xmlConfig {
-        id(mavenGradleEnterpriseXmlFileId)
-        name("Maven: gradle-enterprise.xml")
-        comment("A gradle-enterprise.xml file that defines how to connect to ge.openrewrite.org")
-        content readFileFromWorkspace('maven/gradle-enterprise.xml')
     }
     customConfig {
         id(mavenAddMvnConfigShellFileId)
@@ -118,7 +109,6 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
         wrappers {
             credentialsBinding {
                 usernamePassword('ARTIFACTORY_USER', 'ARTIFACTORY_PASSWORD', 'artifactory')
-                string('GRADLE_ENTERPRISE_ACCESS_KEY', 'gradle-enterprise-access-key')
             }
             timeout {
                 absolute(60)
@@ -133,9 +123,6 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
             }
             if (isMavenBuild) {
                 configFiles {
-                    file(mavenGradleEnterpriseXmlFileId) {
-                        targetLocation(mavenGradleEnterpriseXmlRepoFile)
-                    }
                     file(mavenIngestSettingsXmlFileId) {
                         targetLocation(mavenIngestSettingsXmlRepoFile)
                     }
@@ -167,7 +154,6 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
         }
 
         if (isMavenBuild) {
-            // A step that runs before the maven build to setup the gradle enterprise extension.
             steps {
                 // Adds a shell script into the Jobs workspace in /tmp.
                 shell("bash ${mavenAddMvnConfigShellRepoLocation}")
@@ -188,12 +174,12 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                         includePatterns '*-ast.jar'
                     }
                     deployerDetails {
-                        artifactoryName 'moderne-artifactory'
+                        artifactoryName 'moderne-maven'
                         deployReleaseRepository {
-                            keyFromText 'moderne-public-ast'
+                            keyFromText 'moderne-maven-repo'
                         }
                         deploySnapshotRepository {
-                            keyFromText 'moderne-public-ast'
+                            keyFromText 'moderne-maven-repo'
                         }
                     }
                 }
