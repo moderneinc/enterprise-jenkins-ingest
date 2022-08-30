@@ -32,16 +32,12 @@ configFiles {
         comment("Maven settings that sets mirror on repos that are known to use http, and injects artifactory credentials")
         content readFileFromWorkspace('maven/ingest-settings.xml')
         isReplaceAll(true)
-        serverCredentialMappings {
-            serverCredentialMapping {
-                serverId('moderne-public')
-                credentialsId('artifactory')
-            }
-            serverCredentialMapping {
-                serverId('moderne-remote-cache')
-                credentialsId('artifactory')
-            }
-        }
+        // serverCredentialMappings {
+        //     serverCredentialMapping {
+        //         serverId('moderne-remote-cache')
+        //         credentialsId('artifactory')
+        //     }
+        // }
     }
 }
 new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
@@ -80,10 +76,10 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
 
         jdk("java${repoJavaVersion}")
 
-        environmentVariables {
-            env('ANDROID_HOME', '/usr/lib/android-sdk')
-            env('ANDROID_SDK_ROOT', '/usr/lib/android-sdk')
-        }
+        // environmentVariables {
+        //     env('ANDROID_HOME', '/usr/lib/android-sdk')
+        //     env('ANDROID_SDK_ROOT', '/usr/lib/android-sdk')
+        // }
 
         logRotator {
             daysToKeep(30)
@@ -94,7 +90,7 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                 remote {
                     url("https://github.com/${repoName}")
                     branch(repoBranch)
-                    credentials('jkschneider-pat')
+                    // credentials('cloning-creds')
                 }
                 extensions {
                     localBranch(repoBranch)
@@ -107,9 +103,9 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
         }
 
         wrappers {
-            credentialsBinding {
-                usernamePassword('ARTIFACTORY_USER', 'ARTIFACTORY_PASSWORD', 'artifactory')
-            }
+            // credentialsBinding {
+            //     usernamePassword('ARTIFACTORY_USER', 'ARTIFACTORY_PASSWORD', 'artifactory')
+            // }
             timeout {
                 absolute(60)
                 abortBuild()

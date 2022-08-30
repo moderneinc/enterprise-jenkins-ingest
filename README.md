@@ -10,9 +10,13 @@ Each repository that is subject to nightly ingest is listed in `repos.csv`, alon
 
 1. Click the green "Use this template" button on this page to create a copy of this repository. This is distinct from a fork in that it can be copied into a private organization and does not have an upstream link back to this repository.
 2. Change this line in [add-repos.sh](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/add-repos.sh#L76) to point to your version control system. Note that it does not have to be a GitHub installation; any git server will work.
-3. In `init.gradle`, look for the publish task configuration (approximately [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.gradle#L52-L57)) that defines the Maven repository where artifacts will be published. Set this to any artifact repository with a Maven layout (Artifactory or Nexus).
+3. In `init.gradle`, look for the publish task configuration [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
+4. If your repository requires cloning credentials, configure them [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L93) and [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L106-L108).
 
-Note: Take note of the mirrors section in `ingest-settings.xml` and consider whether this mirror will be DNS addressable in your corporate environment. We use this mirror (and many others) in the version of this process we use for the public Moderne tenant to reduce the load of dependency resolution on artifact repositories with rate limit policies (like Apache's). Inside of your environment, you likely have a different set of mirrors to accomplish the same.
+Optionally:
+
+1. Take note of the mirrors section in `ingest-settings.xml` and consider whether this mirror will be DNS addressable in your corporate environment. We use this mirror (and many others) in the version of this process we use for the public Moderne tenant to reduce the load of dependency resolution on artifact repositories with rate limit policies (like Apache's). Inside of your environment, you likely have a different set of mirrors to accomplish the same.
+2. If you define a mirror in `ingest-settings.xml` that requires credentials to resolve artifacts, uncomment [seed.groovy](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L35-L40) and make sure there is a matching credential ID defined in Jenkins.
 
 ## How to add repositories
 
