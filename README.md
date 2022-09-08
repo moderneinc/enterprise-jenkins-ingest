@@ -10,8 +10,15 @@ Each repository that is subject to nightly ingest is listed in `repos.csv`, alon
 
 1. Click the green "Use this template" button on this page to create a copy of this repository. This is distinct from a fork in that it can be copied into a private organization and does not have an upstream link back to this repository.
 2. Change this line in [add-repos.sh](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/add-repos.sh#L76) to point to your version control system. Note that it does not have to be a GitHub installation; any git server will work.
-3. In `init.gradle`, look for the publish task configuration [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
-4. If your repository requires cloning credentials, configure them [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L93) and [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L106-L108).
+
+If publishing ASTs to Artifactory
+1. In `init.gradle`, look for the publish task configuration [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
+2. If your repository requires cloning credentials, configure them [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L93) and [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L106-L108).
+
+If publishing ASTs to Nexus3
+1. In `publish-ast.groovy`, look for `repositoryRootUrl` [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/publish-ast.groovy#L34). Modify that to point to the Nexus3 repository url that you want to publish ASTs to.
+2. On initial run, the publish-ast.groovy script execution step will fail due to in-process script approval being required. Approve the script at {JENKINS_URL}/scriptApproval/.
+3. Create credentials in jenkins with id 'nexus', of kind "Username with password" with credentials to use when publishing to Nexus. These credentials are bound [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L112).
 
 Optionally:
 
@@ -28,15 +35,19 @@ seed job will manage jobs for.
 
 The csv-file argument is expected to be a valid `csv` file, with optional header:
 
-`repoName, branch, label, style, buildTool`
+`repoName,branch,javaVersion,style,buildTool,buildAction,skip,skipReason,artifactRepositoryType`
 
-| Column | Required | Notes |
-|----|----|----|
-|repoName | Required | Github repository with form `organization/name`, i.e. `google/guava`. |
-|branch | Optional | Github branch name to ingest. |
-|label | Optional | Jenkins worker node label. Current supported values: {`java8`, `java11`}. Defaults to `java8`. |
-|style | Optional | OpenRewrite style name to apply during ingest. |
-|buildTool | Optional | Auto-detected if omitted. Current supported value: {`gradle`, `gradlew`, `maven`}. |
+| Column                   | Required   | Notes                                                                                            |
+|--------------------------|------------|--------------------------------------------------------------------------------------------------|
+| repoName                 | Required   | Github repository with form `organization/name`, i.e. `google/guava`.                            |
+| branch                   | Optional   | Github branch name to ingest.                                                                    |
+| label                    | Optional   | Jenkins worker node label. Current supported values: {`java8`, `java11`}. Defaults to `java8`.   |
+| style                    | Optional   | OpenRewrite style name to apply during ingest.                                                   |
+| buildTool                | Optional   | Auto-detected if omitted. Current supported value: {`gradle`, `gradlew`, `maven`}.               |
+| buildAction              | Optional   | Additional build tool tasks/targets to execute.                                                  |
+| skip                     | Optional   | Use 'true' to omit ingest job creation for the CSV row.                                          |
+| skipReason               | Optional   | Reason a job is set to skip                                                                      |
+| artifactRepositoryType   | Optional   | Use 'nexus' or 'artifactory', determines AST publishing mechanism.                               |
 
 ## NOTE: `init.gradle` changes
 The `init.gradle` file in this repository is imported into Jenkins. Any changes made to the file directly in Jenkins will be overwritten on each run of the seed job.

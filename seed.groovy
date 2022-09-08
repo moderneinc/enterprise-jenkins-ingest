@@ -51,11 +51,12 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
     def repoBuildTool = tokens[4]
     def repoBuildAction = tokens[5]
     def repoSkip = tokens[6]
+    def artifactRepositoryType = tokens[8]
 
     if (repoBuildAction == null) {
-        repoBuildAction = ""
+        repoBuildAction = ''
     }
-    if ("true" == repoSkip) {
+    if ('true' == repoSkip) {
         return
     }
 
@@ -106,6 +107,11 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
             // credentialsBinding {
             //     usernamePassword('ARTIFACTORY_USER', 'ARTIFACTORY_PASSWORD', 'artifactory')
             // }
+            if (artifactRepositoryType == 'nexus') {
+                credentialsBinding {
+                    usernamePassword('NEXUS_CREDENTIALS', 'nexus')
+                }
+            }
             timeout {
                 absolute(60)
                 abortBuild()
@@ -144,7 +150,11 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                     } else {
                         switches("--no-daemon -Dskip.tests=true -I ${gradleInitRepoFile} -Dorg.gradle.jvmargs=-Xmx2048M ${repoBuildAction}")
                     }
-                    tasks('clean moderneJar artifactoryPublish')
+                    if (artifactRepositoryType == 'artifactory') {
+                        tasks('clean moderneJar artifactoryPublish')
+                    } else {
+                        tasks('clean moderneJar')
+                    }
                 }
             }
         }
@@ -160,25 +170,33 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                     mavenName jenkinsMavenName
                     useWrapper(repoBuildTool == 'mvnw')
 
-                    goals "-B -DpomCacheDirectory=. -Drat.skip=true -Dlicense.skip=true -Dlicense.skipCheckLicense=true -Drat.numUnapprovedLicenses=100 -Dgpg.skip -Darchetype.test.skip=true -Dmaven.findbugs.enable=false -Dspotbugs.skip=true -Dpmd.skip=true -Dcpd.skip=true -Dfindbugs.skip=true -DskipTests -DskipITs -Dcheckstyle.skip=true -Denforcer.skip=true -Dskip.npm -Dskip.yarn -Dskip.bower -Dskip.grunt -Dskip.gulp -Dskip.jspm -Dskip.karma -Dskip.webpack -s ${mavenIngestSettingsXmlRepoFile} ${(repoStyle != null) ? "-Drewrite.activeStyle=${repoStyle}" : ''} -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn ${repoBuildAction} install io.moderne:moderne-maven-plugin:0.21.1:ast"
+                    goals "-B -DpomCacheDirectory=. -Drat.skip=true -Dlicense.skip=true -Dlicense.skipCheckLicense=true -Drat.numUnapprovedLicenses=100 -Dgpg.skip -Darchetype.test.skip=true -Dmaven.findbugs.enable=false -Dspotbugs.skip=true -Dpmd.skip=true -Dcpd.skip=true -Dfindbugs.skip=true -DskipTests -DskipITs -Dcheckstyle.skip=true -Denforcer.skip=true -Dskip.npm -Dskip.yarn -Dskip.bower -Dskip.grunt -Dskip.gulp -Dskip.jspm -Dskip.karma -Dskip.webpack -s ${mavenIngestSettingsXmlRepoFile} ${(repoStyle != null) ? "-Drewrite.activeStyle=${repoStyle}" : ''} -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn ${repoBuildAction} io.moderne:moderne-maven-plugin:0.24.0:ast"
                 }
 
-                node / 'buildWrappers' << 'org.jfrog.hudson.maven3.ArtifactoryMaven3Configurator' {
-                    deployArtifacts true
-                    deploymentProperties 'moderne_parsed=true'
-                    artifactDeploymentPatterns {
-                        includePatterns '*-ast.jar'
-                    }
-                    deployerDetails {
-                        artifactoryName 'moderne-maven'
-                        deployReleaseRepository {
-                            keyFromText 'moderne-maven-repo'
+                if (artifactRepositoryType == 'artifactory') {
+                    node / 'buildWrappers' << 'org.jfrog.hudson.maven3.ArtifactoryMaven3Configurator' {
+                        deployArtifacts true
+                        deploymentProperties 'moderne_parsed=true'
+                        artifactDeploymentPatterns {
+                            includePatterns '*-ast.jar'
                         }
-                        deploySnapshotRepository {
-                            keyFromText 'moderne-maven-repo'
+                        deployerDetails {
+                            artifactoryName 'moderne-maven'
+                            deployReleaseRepository {
+                                keyFromText 'moderne-maven-repo'
+                            }
+                            deploySnapshotRepository {
+                                keyFromText 'moderne-maven-repo'
+                            }
                         }
                     }
                 }
+            }
+        }
+
+        if (artifactRepositoryType == 'nexus') {
+            steps {
+                systemGroovyCommand(readFileFromWorkspace('publish-ast.groovy'))
             }
         }
 
