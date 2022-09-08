@@ -11,12 +11,14 @@ Each repository that is subject to nightly ingest is listed in `repos.csv`, alon
 1. Click the green "Use this template" button on this page to create a copy of this repository. This is distinct from a fork in that it can be copied into a private organization and does not have an upstream link back to this repository.
 2. Change this line in [add-repos.sh](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/add-repos.sh#L76) to point to your version control system. Note that it does not have to be a GitHub installation; any git server will work.
 
-If publishing ASTs to Artifactory
+Each entry in repos.csv creates a jenkins job that parses a source repository and deploys the resulting AST either to Artifactory or Nexus. You can have a mixture of jobs, where some deploy to Artifactory and some deploy to Nexus.
+
+If you have any jobs that will publish to Artifactory, you must do the following:
 1. In `init.gradle`, look for the publish task configuration [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
 2. If your repository requires cloning credentials, configure them [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L93) and [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L106-L108).
 
-If publishing ASTs to Nexus3
-1. In `publish-ast.groovy`, look for `repositoryRootUrl` [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/publish-ast.groovy#L34). Modify that to point to the Nexus3 repository url that you want to publish ASTs to.
+If you have any jobs that will publish to Nexus, you must do the following:
+1. In `publish-ast.groovy`, look for `repositoryRootUrl` [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/publish-ast.groovy#L34). Modify that to point to the Nexus repository url that you want to publish ASTs to.
 2. On initial run, the publish-ast.groovy script execution step will fail due to in-process script approval being required. Approve the script at {JENKINS_URL}/scriptApproval/.
 3. Create credentials in jenkins with id 'nexus', of kind "Username with password" with credentials to use when publishing to Nexus. These credentials are bound [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L112).
 
