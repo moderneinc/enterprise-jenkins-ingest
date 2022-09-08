@@ -1,3 +1,5 @@
+def artifactRepositoryType = 'artifactory'
+
 def workspaceDir = new File(__FILE__).getParentFile()
 
 def gradleInitFileId = "gradle-init-gradle"
@@ -51,7 +53,6 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
     def repoBuildTool = tokens[4]
     def repoBuildAction = tokens[5]
     def repoSkip = tokens[6]
-    def artifactRepositoryType = tokens[8]
 
     if (repoBuildAction == null) {
         repoBuildAction = ''
@@ -104,10 +105,11 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
         }
 
         wrappers {
-            // credentialsBinding {
-            //     usernamePassword('ARTIFACTORY_USER', 'ARTIFACTORY_PASSWORD', 'artifactory')
-            // }
-            if (artifactRepositoryType == 'nexus') {
+            if (artifactRepositoryType == 'artifactory') {
+                credentialsBinding {
+                    usernamePassword('ARTIFACTORY_USER', 'ARTIFACTORY_PASSWORD', 'artifactory')
+                }
+            } else if (artifactRepositoryType == 'nexus') {
                 credentialsBinding {
                     usernamePassword('NEXUS_CREDENTIALS', 'nexus')
                 }
