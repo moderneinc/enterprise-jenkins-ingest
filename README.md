@@ -14,7 +14,7 @@ Each repository that is subject to nightly ingest is listed in `repos.csv`, alon
 
 2. Change this line in [add-repos.sh](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/add-repos.sh#L76) to point to your version control system. Note that it does not have to be a GitHub installation; any git server will work.
 
-The `seed.groovy` Job DSL script generates jobs that publish ASTs either to Artifactory or Nexus.
+The `seed.groovy` Job DSL script generates jobs that publish ASTs either to Artifactory or Nexus. They are mutually exclusive, so please follow one of the two configuration options.
 
 ### If you want to publish ASTs to Artifactory
 
@@ -23,7 +23,7 @@ The `seed.groovy` Job DSL script generates jobs that publish ASTs either to Arti
 
 ### If you want to publish ASTs to Nexus
 1. In `seed.groovy`, look for `artifactRepositoryType` [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L1). Change the value to 'nexus'.
-2. In `publish-ast.groovy`, look for `repositoryRootUrl` [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/publish-ast.groovy#L34). Modify that to point to the Nexus3 repository url that you want to publish ASTs to.
+2. In `publish-ast.groovy`, look for `repositoryRootUrl` [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/publish-ast.groovy#L34). Modify that to point to the Nexus repository url that you want to publish ASTs to.
 3. On initial run, the `publish-ast.groovy` script execution step will fail due to in-process script approval being required. Approve the script at `{JENKINS_URL}/scriptApproval/`.
 4. Create credentials in jenkins with id 'nexus', of kind "Username with password" with credentials to use when publishing to Nexus. These credentials are bound [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L112-L114).
 
