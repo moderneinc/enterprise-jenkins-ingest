@@ -1,33 +1,29 @@
 ## Purpose
 
-One of the core steps for setting up Moderne is publishing Moderne abstract syntax trees (ASTs) to an artifact repository such as Artifactory or Nexus. 
+One of the core steps for setting up your Moderne tenant is publishing Moderne abstract syntax trees (ASTs) to an artifact repository such as Artifactory or Nexus. 
 
 While it is possible to [manually add a plugin to each repository](https://app.gitbook.com/o/-MEp_3EtccewzekKY8mZ/s/-MhFwm0iG8BFZKPYoFkH/how-to/integrating-private-code) to accomplish this, there are a few problems with that approach:
 * It does not scale well in organizations with many repositories.
 * It requires modifying the build processes of code, which may not be desired.
 * The task which generates the ASTs takes time and memory. This, in turn, could negatively affect the building and shipping of code.
 
-A much better and safer way to handle the creation of ASTs is to use Jenkins to mass produce the artifacts and for Moderne to ingest them nightly or at set intervals. Please note, though, that this could mean your ASTs are out of date if it's been a long time since the last ingest. 
-
-## Requirements
+A much better and safer way to handle the creation of ASTs is to use Jenkins to mass produce the artifacts and for Moderne to ingest them nightly or at set intervals. 
 
 This approach for creating ASTs at scheduled intervals is designed for use on a Jenkins installation with the [Job DSL](https://plugins.jenkins.io/job-dsl) plugin installed.
-
-Each repository that is subject to nightly ingest is listed in `repos.csv`, along with calculated information about its build tooling and language level requirements. The instructions for generating this file can be found [below](#specify-what-repositories-should-be-ingested).
 
 ## Setup Instructions
 
 ### Copy this repository
 
-Click the green "Use this template" button on this page to create a copy of this repository. This is distinct from a fork in that it can be copied into a private organization and it does not have an upstream link back to this repository.
+If you use GitHub as your version control system, click the green "Use this template" button on this page to create a copy of this repository. This is distinct from a fork in that it can be copied into a private organization and it does not have an upstream link back to this repository.
 
 <p align="center">
   <img width="284" alt="image" src="https://user-images.githubusercontent.com/1697736/189235703-0b7c1dcd-1e73-43f1-81d9-a39c617449c4.png">
 </p>
 
-### Specify your version control system
+If you **don't** use GitHub as your version control system, create a repository in your version control system, clone this repository, add a remote pointing to the repository in your version control system, then push the code into your version control.
 
-If you don't use GitHub as your version control system, change [this line](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/add-repos.sh#L76) in [add-repos.sh](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/add-repos.sh) to point to your version control system (such as BitBucket or GitLab). Note that it does not have to be a GitHub installation; any git server will work.
+Also, change [this line](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/add-repos.sh#L76) in [add-repos.sh](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/add-repos.sh) to point to your version control system (such as BitBucket or GitLab). Any git server will work.
 
 ### Configure `seed.groovy` for Artifactory or Nexus
 
@@ -55,6 +51,8 @@ If you'd like to choose a different time or have it run more often, you'll want 
 2. If you define a mirror in `ingest-settings.xml` that requires credentials to resolve artifacts, uncomment [this line](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L37-L42) in `seed.groovy` and make sure there is a matching credential ID defined in Jenkins.
 
 ### Specify what repositories should be ingested
+
+Each repository that is subject to nightly ingest is listed in `repos.csv`, along with calculated information about its build tooling and language level requirements. 
 
 Whenever you want to add new repositories, please run the provided `add-repos.sh` script. This script takes in a `csv` file and results in additions to the [repos.csv](/repos.csv) file. This file serves as the source of repositories that the seed job will manage jobs for. 
 
