@@ -38,7 +38,7 @@ The [seed.groovy](/seed.groovy) Job DSL script generates jobs that publish ASTs 
 1. In [seed.groovy](/seed.groovy), update the [artifactRepositoryType variable](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L1) to have a value of `nexus`.
 2. In [publish-ast.groovy](/publish-ast.groovy), update [repositoryRootUrl](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/publish-ast.groovy#L34) to point to the Nexus repository url that you want to publish ASTs to.
     >**Note**: On the initial run, the `publish-ast.groovy` script execution step will fail due to in-process script approval being required. Approve the script at `{JENKINS_URL}/scriptApproval/`.
-3. Create credentials in Jenkins. The `id` should be `nexus` and the `type` should be `Username with password`. The credentials should be the ones you use to publish to Nexus. These credentials are bound [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L112-L114).
+3. Create credentials in Jenkins. The `id` should be `nexus` and the `type` should be `Username with password`. The credentials should be the ones you use to publish to Nexus. These credentials are bound [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L116-L119).
 
 ### Update ingestion time (optional)
 In [seed.groovy](/seed.groovy), there is a [triggers section](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L103-L105) that specifies when the ingestion should happen. By default, it will run at around 4:00 am server time every day (Jenkins will pick what minute to run [based on load](https://stackoverflow.com/questions/26383778/spread-load-evenly-by-using-h-rather-than-5)).
