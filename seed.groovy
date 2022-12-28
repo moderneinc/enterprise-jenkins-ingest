@@ -2,7 +2,7 @@
 This variable controls the publishing location (nexus or artifactory)
 Possible values are "artifactory" or "nexus"
 */
-def artifactRepositoryType = "artifactory"
+def artifactRepositoryType = 'nexus'
 
 def workspaceDir = new File(__FILE__).getParentFile()
 

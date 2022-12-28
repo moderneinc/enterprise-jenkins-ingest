@@ -1,1 +1,9 @@
 repoName,branch,javaVersion,style,buildTool,buildAction,skip,skipReason
+0ffz/gpr-for-gradle,master,8,,gradle,,,
+0opslab/opslabJutil,master,8,,maven,,,
+105032013072/javaparser,master,8,,maven,,,
+15189611/jumpAop,master,8,,gradlew,,,
+18824863285/BaseFlutter,master,8,,gradlew,,,
+1and1/cosmo,master,8,,maven,,,
+1and1/reactive,master,8,,maven,,,
+1c-syntax/bslls-dev-tools,develop,8,,gradlew,,,
