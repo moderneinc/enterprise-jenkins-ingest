@@ -31,7 +31,7 @@ The [seed.groovy](/seed.groovy) Job DSL script generates jobs that publish ASTs 
 
 #### If you want to publish ASTs to Artifactory
 
-1. In [init.gradle](/gradle/init.gradle), look for the [publish task configuration](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
+1. In [init.artifactory.gradle](/gradle/init.artifactory.gradle), look for the [publish task configuration](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.artifactory.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
 2. If your repository requires cloning credentials, configure them [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L95) and [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L108-L110).
 
 #### If you want to publish ASTs to Nexus
@@ -45,7 +45,7 @@ In [seed.groovy](/seed.groovy), there is a [triggers section](https://github.com
 
 If you'd like to choose a different time or have it run more often, you'll want to update [this line](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L103-L105).
 
-### Configure mirrors (optional)
+### Configure Maven mirrors (optional)
 
 1. Take note of the [mirrors section](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/maven/ingest-settings.xml#L2-L8) in [ingest-settings.xml](/maven/ingest-settings.xml) and consider whether this mirror will be DNS addressable in your corporate environment. We use this mirror (and many others) in the version of this process we use for the public Moderne tenant to reduce the load of dependency resolution on artifact repositories with rate limit policies (like Apache's). Inside of your environment, you likely have a different set of mirrors to accomplish the same.
 2. If you define a mirror in `ingest-settings.xml` that requires credentials to resolve artifacts, uncomment [this line](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L37-L42) in `seed.groovy` and make sure there is a matching credential ID defined in Jenkins.
@@ -78,5 +78,5 @@ The csv-file argument is expected to be a valid `csv` file, with optional header
 
 ## Troubleshooting
 
-### `init.gradle` changes
-The `init.gradle` file in this repository is imported into Jenkins. Any changes made to the file directly in Jenkins will be overwritten on each run of the seed job.
+### `init-<nexus or artifactory>.gradle` changes
+The `init-<nexus or artifactory>.gradle` file in this repository is imported into Jenkins. Any changes made to the file directly in Jenkins will be overwritten on each run of the seed job.

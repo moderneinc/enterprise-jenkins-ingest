@@ -1,9 +1,14 @@
-def artifactRepositoryType = 'artifactory'
+/*
+This variable controls the publishing location (nexus or artifactory)
+Possible values are "artifactory" or "nexus"
+*/
+def artifactRepositoryType = "artifactory"
 
 def workspaceDir = new File(__FILE__).getParentFile()
 
 def gradleInitFileId = "gradle-init-gradle"
 def gradleInitRepoFile = "moderne-init.gradle"
+def gradleInitLocation = artifactRepositoryType == "artifactory" ? "gradle/init-artifactory.gradle" : "gradle/init-nexus.gradle"
 
 def mavenIngestSettingsXmlFileId = "maven-ingest-settings-credentials"
 def mavenIngestSettingsXmlRepoFile = ".mvn/ingest-settings.xml"
@@ -24,7 +29,7 @@ configFiles {
         id(gradleInitFileId)
         name("Gradle: init.gradle")
         comment("A Gradle init script used to inject universal plugins into a gradle build.")
-        content readFileFromWorkspace('gradle/init.gradle')
+        content readFileFromWorkspace(gradleInitLocation)
     }
     customConfig {
         id(mavenAddMvnConfigShellFileId)
