@@ -101,7 +101,7 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                 remote {
                     url("https://github.com/${repoName}")
                     branch(repoBranch)
-                    // credentials('cloning-creds')
+                    // credentials('cloning-creds') // Jenkins credential ID
                 }
                 extensions {
                     localBranch(repoBranch)
@@ -181,7 +181,7 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                     mavenName jenkinsMavenName
                     useWrapper(repoBuildTool == 'mvnw')
 
-                    goals "-B -DpomCacheDirectory=. -Drat.skip=true -Dlicense.skip=true -Dlicense.skipCheckLicense=true -Drat.numUnapprovedLicenses=100 -Dgpg.skip -Darchetype.test.skip=true -Dmaven.findbugs.enable=false -Dspotbugs.skip=true -Dpmd.skip=true -Dcpd.skip=true -Dfindbugs.skip=true -DskipTests -DskipITs -Dcheckstyle.skip=true -Denforcer.skip=true -Dskip.npm -Dskip.yarn -Dskip.bower -Dskip.grunt -Dskip.gulp -Dskip.jspm -Dskip.karma -Dskip.webpack -s ${mavenIngestSettingsXmlRepoFile} ${(repoStyle != null) ? "-Drewrite.activeStyle=${repoStyle}" : ''} -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn ${repoBuildAction} io.moderne:moderne-maven-plugin:0.24.0:ast"
+                    goals "-B -DpomCacheDirectory=. -Drat.skip=true -Dlicense.skip=true -Dlicense.skipCheckLicense=true -Drat.numUnapprovedLicenses=100 -Dgpg.skip -Darchetype.test.skip=true -Dmaven.findbugs.enable=false -Dspotbugs.skip=true -Dpmd.skip=true -Dcpd.skip=true -Dfindbugs.skip=true -DskipTests -DskipITs -Dcheckstyle.skip=true -Denforcer.skip=true -Dskip.npm -Dskip.yarn -Dskip.bower -Dskip.grunt -Dskip.gulp -Dskip.jspm -Dskip.karma -Dskip.webpack -s ${mavenIngestSettingsXmlRepoFile} ${(repoStyle != null) ? "-Drewrite.activeStyle=${repoStyle}" : ''} -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn ${repoBuildAction} io.moderne:moderne-maven-plugin:0.32.2:ast"
                 }
 
                 if (artifactRepositoryType == 'artifactory') {

@@ -29,6 +29,9 @@ Also, change [this line](https://github.com/moderneinc/enterprise-jenkins-ingest
 
 The [seed.groovy](/seed.groovy) Job DSL script generates jobs that publish ASTs either to Artifactory or Nexus. They are mutually exclusive, so please follow one of the two configuration options:
 
+### Configure Git settings
+1. In [seed.groovy](/seed.groovy) there is a [git remote settings](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L102-L104). Provide the base URL for your SCM server, e.g. `https://github.com/` and the Jenkins crendentials ID for the credentials to use to access the repositories.
+
 #### If you want to publish ASTs to Artifactory
 
 1. In [init.artifactory.gradle](/gradle/init.artifactory.gradle), look for the [publish task configuration](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.artifactory.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
