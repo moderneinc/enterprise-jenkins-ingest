@@ -1,22 +1,22 @@
 <settings>
 <!--    <mirrors>-->
 <!--        <mirror>-->
-<!--            <id>example-mirror-id</id>-->
+<!--            <id>moderne-remote-cache</id>-->
 <!--            <mirrorOf>central</mirrorOf>-->
-<!--            <url>https://~~mirrorurl~~</url>-->
+<!--            <url>https://artifactory.moderne.ninja/artifactory/moderne-remote-cache</url>-->
 <!--        </mirror>-->
 <!--    </mirrors>-->
 
 <!--    <profiles>-->
 <!--        <profile>-->
-<!--            <id>example-id</id>-->
+<!--            <id>moderne-cache-setup</id>-->
 <!--            <activation>-->
 <!--                <activeByDefault>true</activeByDefault>-->
 <!--            </activation>-->
 <!--            <repositories>-->
 <!--                <repository>-->
-<!--                    <id>example-id</id>-->
-<!--                    <url>https://~~repourl~~</url>-->
+<!--                    <id>moderne-remote-cache</id>-->
+<!--                    <url>https://artifactory.moderne.ninja/artifactory/moderne-remote-cache</url>-->
 <!--                    <releases>-->
 <!--                        <enabled>true</enabled>-->
 <!--                    </releases>-->

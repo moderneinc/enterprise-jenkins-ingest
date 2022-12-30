@@ -101,7 +101,7 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                 remote {
                     url("https://github.com/${repoName}")
                     branch(repoBranch)
-                    // credentials('cloning-creds') // Jenkins credential ID
+                    credentials('39e6439b-257d-4087-8bcd-ecd208493bc5')
                 }
                 extensions {
                     localBranch(repoBranch)
