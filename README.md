@@ -36,7 +36,7 @@ The [seed.groovy](/seed.groovy) Job DSL script generates jobs that publish ASTs 
 
 #### If you want to publish ASTs to Nexus
 1. In [seed.groovy](/seed.groovy), update the [artifactRepositoryType variable](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L1) to have a value of `nexus`.
-2. In [publish-ast.groovy](/publish-ast.groovy), update [repositoryRootUrl](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/publish-ast.groovy#L34) to point to the Nexus repository url that you want to publish ASTs to.
+2. In [publish-ast.groovy](/publish-ast.groovy), update [repositoryRootUrl](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/publish-ast.groovy#L29) to point to the Nexus repository url that you want to publish ASTs to.
     >**Note**: On the initial run, the `publish-ast.groovy` script execution step will fail due to in-process script approval being required. Approve the script at `{JENKINS_URL}/scriptApproval/`.
 3. Create credentials in Jenkins. The `id` should be `nexus` and the `type` should be `Username with password`. The credentials should be the ones you use to publish to Nexus. These credentials are bound [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L116-L119).
 

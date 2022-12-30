@@ -207,7 +207,7 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
 
         if (artifactRepositoryType == 'nexus') {
             steps {
-                systemGroovyCommand(readFileFromWorkspace('publish-ast.groovy'))
+                groovyCommand(readFileFromWorkspace('publish-ast.groovy'))
             }
         }
 
