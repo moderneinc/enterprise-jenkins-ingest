@@ -1,0 +1,62 @@
+/**
+ Do not make changes to this file directly in Jenkins, just push changes to
+ github. The Seed job will always update the file on Jenkins based on the current
+ version of this file in the rep.
+ */
+initscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2" }
+    }
+
+    // Add moderne plugin to classpath of this init script.
+    dependencies {
+        classpath("io.moderne:moderne-gradle-plugin:latest.release")
+    }
+}
+
+// Enable build cache, only available for Gradle 3.5+, so invoked defensively
+startParameter.metaClass.getMetaProperty("buildCacheEnabled")?.setProperty(startParameter, true)
+
+settingsEvaluated { settings ->
+    settings.pluginManagement {
+        repositories {
+            mavenCentral()
+            maven { url "https://plugins.gradle.org/m2" }
+        }
+    }
+}
+
+allprojects {
+    def unwantedTasks = ['javadoc', 'findbugs', 'sonarqube']
+
+    project.tasks.all { task ->
+        if (unwantedTasks.contains(task.name) || task.name.startsWith('checkstyle')) {
+            task.enabled = false
+        }
+    }
+    if (!"buildSrc".equals(project.name)) {
+        project.publishing {
+                publications {
+                    removeAll()
+                    create("moderne", MavenPublication.class) {
+                        artifacts = [tasks.getByName("moderneJar")]
+                    }
+                }
+        }
+    }
+
+    project.afterEvaluate {
+        if (!project.plugins.hasPlugin(io.moderne.gradle.ModernePlugin)) {
+            project.plugins.apply(io.moderne.gradle.ModernePlugin)
+        }
+        if (project.group == null || !project.group?.trim()) {
+            // For publishing to succeed a groupId must be set
+            project.group = "io.moderne.unknown"
+        }
+        // Plugin must be able to resolve its dependencies
+        project.repositories {
+            mavenCentral()
+        }
+    }
+}

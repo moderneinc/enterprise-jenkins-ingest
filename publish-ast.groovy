@@ -1,6 +1,3 @@
-import hudson.FilePath
-import hudson.remoting.VirtualChannel
-
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
@@ -9,21 +6,19 @@ import java.util.jar.JarFile
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
-FilePath workspaceFilePath = build.getWorkspace()
-List<Path> astJarPaths = workspaceFilePath.act({ File f, VirtualChannel c ->
-    Stream<Path> paths
-    try {
-        paths = Files.walk(f.toPath())
-        return paths.filter({p -> p.toFile().isFile() && p.toString().endsWith('-ast.jar')}).collect(Collectors.toList())
-    } finally {
-        if (paths != null) {
-            paths.close()
-        }
+Stream<Path> paths
+List<Path> astJarPaths
+try {
+    File f = new File(System.getenv('WORKSPACE'))
+    paths = Files.walk(f.toPath())
+    astJarPaths = paths.filter({p -> p.toFile().isFile() && p.toString().endsWith('-ast.jar')}).collect(Collectors.toList())
+} finally {
+    if (paths != null) {
+        paths.close()
     }
+}
 
-} as FilePath.FileCallable)
-
-String usernamePassword = build.environment.NEXUS_CREDENTIALS
+String usernamePassword = System.getenv('NEXUS_CREDENTIALS')
 def basicAuth = Base64.getEncoder().encodeToString(usernamePassword.getBytes('UTF-8'))
 
 astJarPaths.each({astJarPath ->
