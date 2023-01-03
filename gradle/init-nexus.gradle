@@ -35,16 +35,6 @@ allprojects {
             task.enabled = false
         }
     }
-    if (!"buildSrc".equals(project.name)) {
-        project.publishing {
-                publications {
-                    removeAll()
-                    create("moderne", MavenPublication.class) {
-                        artifacts = [tasks.getByName("moderneJar")]
-                    }
-                }
-        }
-    }
 
     project.afterEvaluate {
         if (!project.plugins.hasPlugin(io.moderne.gradle.ModernePlugin)) {
