@@ -34,7 +34,7 @@ The [seed.groovy](/seed.groovy) Job DSL script generates jobs that publish ASTs 
 
 #### If you want to publish ASTs to Artifactory
 
-1. In [init.artifactory.gradle](/gradle/init.artifactory.gradle), look for the [publish task configuration](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init.artifactory.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
+1. In [init-artifactory.gradle](/gradle/init-artifactory.gradle), look for the [publish task configuration](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/gradle/init-artifactory.gradle#L52-L57) that defines the Maven repository where artifacts will be published. Set this to any Artifactory repository.
 2. If your repository requires cloning credentials, configure them [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L95) and [here](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L108-L110).
 
 #### If you want to publish ASTs to Nexus
