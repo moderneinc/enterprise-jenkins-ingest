@@ -49,9 +49,9 @@ allprojects {
         }
         project.artifactory {
             publish {
-                contextUrl = "https://artifactory.moderne.ninja/artifactory"
+                contextUrl = System.getenv('ARTIFACTORY_URL') ?: "https://artifactory.moderne.ninja/artifactory"
                 repository {
-                    repoKey = 'moderne-maven-repo'
+                    repoKey = System.getenv('ARTIFACTORY_REPO_KEY') ?: 'moderne-maven-repo'
                     username = System.getenv("ARTIFACTORY_USER")
                     password = System.getenv("ARTIFACTORY_PASSWORD")
                 }
