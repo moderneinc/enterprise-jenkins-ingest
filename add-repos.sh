@@ -56,14 +56,14 @@ do
         continue
     fi
 
-    REPO="${array[0]}"
-    BRANCH="${array[1]}"
-    JAVA_VERSION="${array[2]}"
-    STYLE="${array[3]}"
-    BUILD_TOOL="${array[4]}"
-    BUILD_ACTION=""
-    SKIP=""
-    SKIP_REASON=""
+    SCM="${array[0]}"
+    REPO="${array[1]}"
+    BRANCH="${array[2]}"
+    JAVA_VERSION="${array[3]}"
+
+    if [ -z "$SCM" ];then
+        SCM="github.com"
+    fi
 
     if [ -z "$JAVA_VERSION" ];then
         JAVA_VERSION="8"
@@ -73,33 +73,9 @@ do
     mkdir -p "$clone_dir"
     cd "$clone_dir" || exit
 
-    if ! git clone --depth 1 --no-checkout "https://github.com/$REPO.git"; then
+    if ! git clone --depth 1 --no-checkout "https://$SCM/$REPO.git"; then
         echo "Failed to clone $REPO"
         continue
-    fi
-
-    if [ -z "$BUILD_TOOL" ]; then
-
-        REPO_NAME=$(basename "$REPO")
-        cd "$REPO_NAME" || exit
-        git sparse-checkout set --no-cone /build.gradle.kts /build.gradle /pom.xml /gradlew
-        git checkout
-
-        if [ -f "build.gradle.kts" ] || [ -f "build.gradle" ]; then
-            if [ -f "gradlew" ]; then 
-                BUILD_TOOL=gradlew
-            else
-                BUILD_TOOL=gradle
-            fi
-        elif [ -f "pom.xml" ]; then
-            BUILD_TOOL=maven
-        fi
-    fi
-
-    if [ -z "$BUILD_TOOL" ]; then
-        echo "Skipping $REPO, because none of the supported build tool files (build.gradle.kts, build.gradle, or pom.xml) is present at the root."
-        SKIP_REASON="Top-level build tool file is missing"
-        SKIP="true"
     fi
 
     if [ -z "$BRANCH" ]; then
@@ -112,9 +88,9 @@ do
     cd "$base_dir" || exit
 
     if [ ! -f "$output_csv" ]; then
-        printf "repoName,branchName,javaVersion,style,buildTool,buildAction,skip,skipReason\n" >&3
+        printf "scm,repoName,branchName,javaVersion\n" >&3
     fi
-    printf "%s,%s,%s,%s,%s,%s,%s,%s,%s\n" "$REPO" "$BRANCH" "$JAVA_VERSION" "$STYLE" "$BUILD_TOOL" "$BUILD_ACTION" "$SKIP" "$SKIP_REASON" >&3
+    printf "$s,%s,%s,%s\n" "$SCM" "$REPO" "$BRANCH" "$JAVA_VERSION" >&3
 
 done < "$input_csv" 3>> "$output_csv"
 
