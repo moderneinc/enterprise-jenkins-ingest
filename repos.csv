@@ -1,1 +1,1 @@
-repoName,branch,javaVersion,skip,skipReason
+scmHost,repoName,branch,javaVersion,repoStyle,repoBuildAction,skip

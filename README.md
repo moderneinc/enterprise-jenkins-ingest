@@ -52,11 +52,14 @@ Example of how to run the script with an input file called `input.csv`:
 
 The csv-file argument is expected to be a valid `csv` file, with optional headers:
 
-`scmHost,repoName,branch,javaVersion`
+`scmHost,repoName,branch,javaVersion,repoStyle,repoBuildAction,skip`
 
-| Column       | Required | Notes                                                                       |
-|--------------|----------|-----------------------------------------------------------------------------|
-| scmHost      | Optional | SCM Host. By default `github.com`.                                          |
-| repoName     | Required | Repository Slug with form `organization/name`, i.e. `google/guava`.         |
-| branch       | Optional | Github branch name to ingest.                                               |
-| Java Version | Optional | Java version. Current supported values: {`8`, `11`, `17`}. Defaults to `8`. |
+| Column          | Required | Notes                                                                             |
+|-----------------|----------|-----------------------------------------------------------------------------------|
+| scmHost         | Optional | SCM Host. By default `github.com`.                                                |
+| repoName        | Required | Repository Slug with form `organization/name`, i.e. `google/guava`.               |
+| branch          | Optional | Github branch name to ingest.                                                     |
+| Java Version    | Optional | Java version. Current supported values: {`8`, `11`, `17`}. Defaults to `8`.       |
+| repoStyle       | Optional | OpenRewrite style name to apply during ingest.                                    |
+| repoBuildAction | Optional | Additional build tool tasks/targets to execute first for Maven and Gradle builds. |
+| skip            | Optional | Repo to skip                                                                      |
