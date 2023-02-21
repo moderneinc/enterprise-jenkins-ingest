@@ -60,6 +60,9 @@ do
     REPO="${array[1]}"
     BRANCH="${array[2]}"
     JAVA_VERSION="${array[3]}"
+    REPO_STYLE="${array[4]}"
+    REPO_BUILD_ACTION=""
+    REPO_SKIP=""
 
     if [ -z "$SCM" ];then
         SCM="github.com"
@@ -90,7 +93,7 @@ do
     if [ ! -f "$output_csv" ]; then
         printf "scm,repoName,branchName,javaVersion\n" >&3
     fi
-    printf "$s,%s,%s,%s\n" "$SCM" "$REPO" "$BRANCH" "$JAVA_VERSION" >&3
+    printf "$s,%s,%s,%s\n" "$SCM" "$REPO" "$BRANCH" "$JAVA_VERSION" "$REPO_STYLE" "$REPO_BUILD_ACTION" "$REPO_SKIP" >&3
 
 done < "$input_csv" 3>> "$output_csv"
 
