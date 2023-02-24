@@ -1,15 +1,15 @@
 ## Purpose
 
-One of the core steps for setting up your Moderne tenant is publishing Moderne abstract syntax trees (ASTs) to an artifact repository such as Artifactory or Nexus. 
+One of the core steps for setting up your Moderne tenant is publishing Moderne [lossless semantic trees](https://docs.moderne.io/concepts/lossless-semantic-trees) (LSTs) to an artifact repository such as Artifactory or Nexus. 
 
-While it is possible to [manually add a plugin to each repository](https://app.gitbook.com/o/-MEp_3EtccewzekKY8mZ/s/-MhFwm0iG8BFZKPYoFkH/how-to/integrating-private-code) to accomplish this, there are a few problems with that approach:
+While it is possible to [manually add a plugin to each repository](https://docs.moderne.io/how-to/integrating-private-code) to accomplish this, there are a few problems with that approach:
 * It does not scale well in organizations with many repositories.
 * It requires modifying the build processes of code, which may not be desired.
-* The task which generates the ASTs takes time and memory. This, in turn, could negatively affect the building and shipping of code.
+* The task which generates the LSTs takes time and memory. This, in turn, could negatively affect the building and shipping of code.
 
-A much better and safer way to handle the creation of ASTs is to use Jenkins to mass produce the artifacts and for Moderne to ingest them nightly or at set intervals. 
+A much better and safer way to handle the creation of LSTs is to use Jenkins to mass produce the artifacts and for Moderne to ingest them nightly or at set intervals. 
 
-This approach for creating ASTs at scheduled intervals is designed for use on a Jenkins installation with the [Job DSL](https://plugins.jenkins.io/job-dsl) plugin installed.
+This approach for creating LSTs at scheduled intervals is designed for use on a Jenkins installation with the [Job DSL](https://plugins.jenkins.io/job-dsl) plugin installed.
 
 ## Jenkins Setup Instructions
 
@@ -33,7 +33,7 @@ Also, change [this line](https://github.com/moderneinc/enterprise-jenkins-ingest
 The [seed.groovy](/seed.groovy) Job DSL script generates jobs that publish LSTs using a container image. Open the file, 
 and define the value for the following parameters:
 
-1. `publishURL` [Required]: The URL to publish the ASTs. This needs to be a Maven repository
+1. `publishURL` [Required]: The URL to publish the LSTs. This needs to be a Maven repository
 2. `publishCreds`: The Jenkins credentials ID that reference your user/password for your Maven repository. By default is `artifactory`
 3. `scmCredentialsId`: The Jenkins credentials ID to clone the repo. By default is `cloning-creds`
 4. `containerIngestorVersion`: By default is `latest`.
