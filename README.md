@@ -15,6 +15,7 @@ This approach for creating LSTs at scheduled intervals is designed for use on a 
 
 - Install the [Job DSL Plugin](https://plugins.jenkins.io/job-dsl)
 - Install the [Config File Provider Plugin](https://plugins.jenkins.io/config-file-provider)
+- Install Maven and/or Gradle if they are needed to build your repositories.
 
 ### Copy this repository
 
