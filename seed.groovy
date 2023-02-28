@@ -7,7 +7,7 @@ def publishURL = 'https://artifactory.acme.com/artifactory/moderne-ingest'
 def publishCreds = 'artifactory'
 def scmCredentialsId = 'cloning-creds'
 def scheduling='H 4 * * *'
-def moderneCLIVersion= '0.0.8'
+def moderneCLIVersion= '0.0.14'
 
 folder('ingest') {
     displayName('Ingest Jobs')
