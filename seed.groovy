@@ -25,7 +25,7 @@ configFiles {
 }
 
 new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
-    if (tokens[0].startsWith('repoName')) {
+    if (tokens[0].startsWith('scmHost')) {
         return
     }
     def scmHost = tokens[0]
