@@ -71,7 +71,6 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
             wrappers {
                 credentialsBinding {
                     usernamePassword('MODERNE_PUBLISH_USER', 'MODERNE_PUBLISH_PWD', publishCreds)
-                    usernamePassword('AZURE_USER', 'AZURE_PWD', azureCreds)
                 }
                 configFiles {
                     file(mavenIngestSettingsXmlFileId) {
@@ -90,7 +89,7 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                 extraArgs = ' --mvnSettingsXml ' + mavenIngestSettingsXmlRepoFile
             }
 
-            shell('curl --request GET https://pkgs.dev.azure.com/moderneinc/moderne/_packaging/moderne-cli/maven/v1/io/moderne/moderne-cli/'+ moderneCLIVersion +'/moderne-cli-'+ moderneCLIVersion +' --user ' + ${AZURE_USERNAME} + ':' + ${AZURE_PASSWORD} + ' >> mod && chmod u+x mod')
+            shell('curl --request GET https://pkgs.dev.azure.com/moderneinc/moderne_public/_packaging/moderne/maven/v1/io/moderne/moderne-cli-linux/' + moderneCLIVersion +'/moderne-cli-linux-'+ moderneCLIVersion + ' >> mod && chmod u+x mod')
             shell('./mod publish --path ' + ${WORKSPACE} + ' --url ' + publishURL + ' --user ' + ${MODERNE_PUBLISH_USER} + ' --password '+ ${MODERNE_PUBLISH_PWD} + ' ' + extraArgs )
         }
 
