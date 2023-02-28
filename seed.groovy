@@ -9,6 +9,7 @@ def azureCreds = 'azure'
 def scmCredentialsId = 'cloning-creds'
 def scheduling='H 4 * * *'
 def moderneCLIVersion= '0.0.8'
+def moderneCLIURL = 'https://pkgs.dev.azure.com/moderneinc/moderne_public/_packaging/moderne/maven/v1/io/moderne/moderne-cli-linux/' + moderneCLIVersion +'/moderne-cli-linux-'+ moderneCLIVersion
 
 folder('ingest') {
     displayName('Ingest Jobs')
@@ -32,10 +33,9 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
     def repoName = tokens[1]
     def repoBranch = tokens[2]
     def repoJavaVersion = tokens[3]
-    def repoStyle = tokens[4]
-    def repoBuildAction = tokens[5]
+    def repoStyle = tokens[4] ?: ''
+    def repoBuildAction = tokens[5] ?: ''
     def repoSkip = tokens[6]
-
 
     if ('true' == repoSkip) {
         return
@@ -44,7 +44,6 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
     def repoJobName = repoName.replaceAll('/', '_')
 
     boolean requiresJava = repoJavaVersion != null && !repoJavaVersion.equals("")
-
 
     println("creating job $repoJobName")
 
@@ -89,13 +88,14 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                 extraArgs = ' --mvnSettingsXml ' + mavenIngestSettingsXmlRepoFile
             }
 
-            shell('curl --request GET https://pkgs.dev.azure.com/moderneinc/moderne_public/_packaging/moderne/maven/v1/io/moderne/moderne-cli-linux/' + moderneCLIVersion +'/moderne-cli-linux-'+ moderneCLIVersion + ' >> mod && chmod u+x mod')
-            shell('./mod publish --path ' + ${WORKSPACE} + ' --url ' + publishURL + ' --user ' + ${MODERNE_PUBLISH_USER} + ' --password '+ ${MODERNE_PUBLISH_PWD} + ' ' + extraArgs )
+            shell("curl --request GET ${moderneCLIURL} >> mod && chmod u+x mod")
+            shell('./mod publish --path ' + ${WORKSPACE} + ' --url ' + publishURL + ' ' + extraArgs)
         }
 
         logRotator {
             daysToKeep(7)
         }
+
         triggers {
             cron(scheduling)
         }
