@@ -48,11 +48,6 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
 
     job("ingest/$repoJobName") {
 
-        if (requiresJava) {
-            label('multi-jdk')
-            jdk("java${repoJavaVersion}")
-        }
-
         steps {
             scm {
                 git {
@@ -88,7 +83,13 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
             }
 
             shell("curl --request GET ${moderneCLIURL} >> mod && chmod u+x mod")
-            shell('./mod publish --path . --url ' + publishURL + ' ' + extraArgs)
+            def javaHome = ''
+            
+            //if (requiresJava) {
+              //  javaHome = "export JAVA_HOME=/usr/lib/jvm/temurin-${repoJavaVersion}-jdk-amd64 && "             
+              //  JAVA_HOME is required by Java build tools such as Maven and Gradle that needs to be installed in the runtime environment
+            //}
+            shell(javaHome + './mod publish --path . --url ' + publishURL + ' ' + extraArgs)
         }
 
         logRotator {
