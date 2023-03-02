@@ -65,3 +65,7 @@ The csv-file argument is expected to be a valid `csv` file, with optional header
 | repoStyle       | Optional | OpenRewrite style name to apply during ingest.                                    |
 | repoBuildAction | Optional | Additional build tool tasks/targets to execute first for Maven and Gradle builds. |
 | skip            | Optional | Repo to skip                                                                      |
+
+### Support for git:// clone URLs
+
+By default, the ingestor is assuming `https://` clone URLs. If in your case, you use git:// urls, please change this [line in the seed.groovy file](https://github.com/moderneinc/enterprise-jenkins-ingest/blob/main/seed.groovy#L55)
