@@ -32,8 +32,12 @@ Also, change [this line](https://github.com/moderneinc/enterprise-jenkins-ingest
 
 ### Configure `seed.groovy` with your developer tools and credentials
 
-The [seed.groovy](/seed.groovy) Job DSL script generates jobs that publish LSTs using a container image. Open the file, 
-and define the value for the following parameters:
+The [seed.groovy](/seed.groovy) Job DSL script generates jobs that publish LSTs using a container image. 
+The [seed.groovy](/seed.groovy) requires to be executed in a Jenkins controller/master instead of a node/slave using Grrovy. 
+After running it once, you will see a failed execution. This is because you need to approve the script first, which is a manual 
+step in the Jenkins Admin.
+
+To customize the ingestion, open the file, and define the value for the following parameters:
 
 1. `publishURL` [Required]: The URL to publish the LSTs. This needs to be a Maven repository
 2. `publishCreds`: The Jenkins credentials ID that reference your user/password for your Maven repository. By default is `artifactory`
