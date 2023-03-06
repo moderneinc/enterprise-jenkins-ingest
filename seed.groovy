@@ -82,7 +82,7 @@ new File(workspaceDir, 'repos.csv').splitEachLine(',') { tokens ->
                 extraArgs = extraArgs + ' --mvnSettingsXml ' + mavenIngestSettingsXmlRepoFile
             }
 
-            shell("curl --request GET ${moderneCLIURL} >> mod && chmod u+x mod")
+            shell("curl --request GET ${moderneCLIURL} > mod && chmod u+x mod")
             def javaHome = ''
             
             //if (requiresJava) {
