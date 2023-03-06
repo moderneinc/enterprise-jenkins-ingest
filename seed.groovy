@@ -7,7 +7,7 @@ def publishURL = 'https://artifactory.acme.com/artifactory/moderne-ingest'
 def publishCreds = 'artifactory'
 def scmCredentialsId = 'cloning-creds'
 def scheduling='H 4 * * *'
-def moderneCLIVersion= '0.0.14'
+def moderneCLIVersion= '0.0.18'
 def moderneCLIURL = 'https://pkgs.dev.azure.com/moderneinc/moderne_public/_packaging/moderne/maven/v1/io/moderne/moderne-cli-linux/' + moderneCLIVersion +'/moderne-cli-linux-'+ moderneCLIVersion
 
 folder('ingest') {
